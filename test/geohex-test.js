@@ -36,9 +36,8 @@ tape("getZoneByCode can return lat/lon by hexagon code", function(test) {
     var code = tc[0], lat= tc[1], lon = tc[2], level = code.length - 2;
 
     var zone = geohex.getZoneByCode(code);
-    testDouble(test, zone.lat, lat, FP_PRECISION);
-    testDouble(test, zone.lon, lon, FP_PRECISION);
-
+    test.equal(zone.lat.toFixed(FP_PRECISION), lat.toFixed(FP_PRECISION));
+    test.equal(zone.lon.toFixed(FP_PRECISION), lon.toFixed(FP_PRECISION));
   }
 
   test.end();
@@ -62,8 +61,8 @@ tape("getHexCoords can return coords of hexagon vertices by lat/lon of a point",
 
     for (var pi = 0; pi < 6; pi++) {
       var cs = coords.shift();
-      testDouble(test, tc.shift(), cs.lat, FP_PRECISION);
-      testDouble(test, tc.shift(), cs.lon, FP_PRECISION);
+      test.equal(tc.shift().toFixed(FP_PRECISION), cs.lat.toFixed(FP_PRECISION));
+      test.equal(tc.shift().toFixed(FP_PRECISION), cs.lon.toFixed(FP_PRECISION));
     }
   }
 
@@ -83,7 +82,7 @@ tape("getHexSize can return hexagon sizes by lat/lon of a point", function(test)
 
     var zone = geohex.getZoneByLocation(lat, lon, level);
 
-    testDouble(test, size, zone.getHexSize(), FP_PRECISION);
+    test.equal(size.toFixed(FP_PRECISION), zone.getHexSize().toFixed(FP_PRECISION));
   }
 
   test.end();
@@ -95,8 +94,4 @@ tape("getHexSize can return hexagon sizes by lat/lon of a point", function(test)
 
 
 
-
-function testDouble(test, expected, actual, prec) {
-  test.equal(expected.toFixed(prec), actual.toFixed(prec));
-}
 

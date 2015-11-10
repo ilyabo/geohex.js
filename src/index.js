@@ -21,6 +21,7 @@ var h_key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 var h_base = 20037508.34;
 var h_deg = Math.PI*(30/180);
 var h_k = Math.tan(h_deg);
+var EPS = 1e-10;
 
 // private static
 var _zoneCache = {};
@@ -163,7 +164,7 @@ function getZoneByLocation(lat, lon, level) {
 }
 
 function getZoneByCode(code) {
-	if (!!_zoneCache[code])	return _zoneCache[code];
+	//if (!!_zoneCache[code])	return _zoneCache[code];
 	var level = code.length;
 	var h_size =  calcHexSize(level);
 	var unit_x = 6 * h_size;
@@ -220,11 +221,12 @@ function getZoneByCode(code) {
 	var h_lon_x = (h_lat_y - h_y * unit_y) / h_k;
 
 	var h_loc = xy2loc(h_lon_x, h_lat_y);
-	if(h_loc.lon>180){
+
+	if(h_loc.lon > 180 + EPS){
 		 h_loc.lon -= 360;
 		 h_x -= Math.pow(3,level);    // v3.01
 		 h_y += Math.pow(3,level);    // v3.01
-	}else if(h_loc.lon<=-180){
+	}else if(h_loc.lon < - (180 - EPS)){
 		 h_loc.lon += 360;
 		 h_x += Math.pow(3,level);    // v3.01
 		 h_y -= Math.pow(3,level);    // v3.01
