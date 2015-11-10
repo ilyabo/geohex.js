@@ -1,6 +1,6 @@
 {
   "name": "geohex.js",
-  "version": "3.2.0",
+  "version": "3.0.1",
   "description": "Hexagonal geo-coding system",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "hexagonal",
     "geo-coding"
   ],
-  "author": "Tadayasu Sasada",       g
+  "author": "Tadayasu Sasada",
   "license": "CC-BY-SA",
   "bugs": {
     "url": "https://github.com/ilyabo/geohex.js/issues"

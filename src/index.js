@@ -1,18 +1,18 @@
 /// COPYRIGHT 2013 GEOHEX Inc. ///
 /// GEOHEX by @sa2da (http://geohex.net) is licensed under Creative Commons BY-SA 2.1 Japan License. ///
 
-///////////[2010.12.14 v3公開]/////////
-///////////[2010.12.28 zoneByCode()内のlonを±180以内に補正]/////////
-///////////[2011.9.11 zoneByCode()内のh_x,h_yを補正]/////////
-///////////[2013.1.6 180度線をまたぐ場合のHEXのX,Y値を一意に補正]/////////
-///////////[2013.1.6 範囲外のX,Y値を範囲内に補正する関数 adjustXY() を追加]/////////
-///////////[2013.1.6 X,Y値からHEXを取得する関数 getZoneByXY() を追加]/////////
-///////////[2013.1.6 NamespaceをGeoHexからGEOHEXに変更]/////////
-///////////[2013.1.9 adjustXYの補正ロジックを修正]/////////
-///////////[2013.1.11 getZoneByLocation()→getXYByLocation()とgetZoneByXY()に分割]/////////
-///////////[2013.1.11 getZoneByCode()→getXYByCode()とgetZoneByXY()に分割]/////////
-///////////[2013.1.11 adjustXY補正のx<yをx>yの場合に-180補正へ修正]/////////
-///////////[2013.1.17 getZoneByXY()内 -180度補正Code生成ロジックを修正]/////////
+///////////[2010.12.14 V3 Publish /////////
+///////////[2010.12.28 ZoneByCode () is corrected to within ± 180 the lon in] /////////
+///////////[2011.9.11 ZoneByCode () within h_x, corrects the h_y] /////////
+///////////[2013.1.6 HEX of X in the case of straddling the 180-degree line, uniquely correct the Y value] /////////
+///////////[2013.1.6 Outside the range of X, add the function adjustXY () to be corrected within the Y value] /////////
+///////////[2013.1.6 X, add the function getZoneByXY () to get the HEX from the Y value] /////////
+///////////[2013.1.6 Change Namespace from GeoHex to GEOHEX] /////////
+///////////[2013.1.9 Fixed correction logic of adjustXY] /////////
+///////////[2013.1.11 GetZoneByLocation () → getXYByLocation () and is divided into getZoneByXY ()] /////////
+///////////[2013.1.11 GetZoneByCode () → getXYByCode () and is divided into getZoneByXY ()] /////////
+///////////[2013.1.11 AdjustXY Fixed to -180 correction in the case of a correction of the x <y the x> y] /////////
+///////////[2013.1.17 GetZoneByXY () in -180 degrees correction Code generation logic the Modify /////////
 
 
 var getXYListByRect = require('./getXYListByRect');
@@ -103,11 +103,11 @@ function getXYByLocation(lat, lon, _level) {
 	var h_pos_y = (lat_grid - h_k * lon_grid) / unit_y;
 	var h_x_0 = Math.floor(h_pos_x);
 	var h_y_0 = Math.floor(h_pos_y);
-	var h_x_q = h_pos_x - h_x_0; 
+	var h_x_q = h_pos_x - h_x_0;
 	var h_y_q = h_pos_y - h_y_0;
 	var h_x = Math.round(h_pos_x);
 	var h_y = Math.round(h_pos_y);
-	
+
 	if (h_y_q > -h_x_q + 1) {
 		if((h_y_q < 2 * h_x_q) && (h_y_q > 0.5 * h_x_q)){
 			h_x = h_x_0 + 1;
@@ -119,7 +119,7 @@ function getXYByLocation(lat, lon, _level) {
 			h_y = h_y_0;
 		}
 	}
-	
+
 	var inner_xy = adjustXY(h_x,h_y,_level);
 	h_x = inner_xy.x;
 	h_y = inner_xy.y;
@@ -160,7 +160,7 @@ function getXYByCode(code) {
 
 	h_decx =new Array();
 	h_decy =new Array();
-	
+
 	for(i=0;i<h_dec3.length/2;i++){
 	  h_decx[i]=h_dec3.charAt(i*2);
 	  h_decy[i]=h_dec3.charAt(i*2+1);
@@ -179,17 +179,17 @@ function getXYByCode(code) {
 	        h_y += h_pow;
 	    }
 	}
-	
+
 	var inner_xy = adjustXY(h_x,h_y,level);
 	h_x = inner_xy.x;
 	h_y = inner_xy.y;
-	
+
 	return {"x":h_x, "y":h_y};
 }
 
 function getZoneByXY(_x, _y, _level) {
 	var h_size = calcHexSize(_level);
-	
+
 	var h_x =_x;
 	var h_y=_y;
 
@@ -202,10 +202,10 @@ function getZoneByXY(_x, _y, _level) {
 	var z_loc = xy2loc(h_lon, h_lat);
 	var z_loc_x = z_loc.lon;
 	var z_loc_y = z_loc.lat;
-	
+
 	var max_hsteps = Math.pow(3,_level+2);
 	var hsteps = Math.abs(h_x - h_y);
-	
+
 	if(hsteps==max_hsteps){
 		if(h_x>h_y){
 		var tmp = h_x;
@@ -214,7 +214,7 @@ function getZoneByXY(_x, _y, _level) {
 		}
 		z_loc_x = -180;
 	}
-	
+
 	var h_code ="";
 	var code3_x =new Array();
 	var code3_y =new Array();
