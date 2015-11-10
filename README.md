@@ -9,6 +9,25 @@ Covering the world with hexagons on several zoom levels:
 Based on the [GeoHex library](http://www.geohex.org/) by [Tadayasu Sasada](https://twitter.com/sa2da).
 
 
+## Why hexagons?
+
+![squares vs hexagons](doc/why-hexagons.png)
+
+>  Why hexagons? There are many reasons for using hexagons, at least over squares. Hexagons have symmetry of nearest neighbors which is lacking in square bins. Hexagons are the maximum number of sides a polygon can have for a regular tesselation of the plane, so in terms of packing a hexagon is 13% more efficient for covering the plane than squares. This property translates into better sampling efficiency at least for elliptical shapes. Lastly hexagons are visually less biased for displaying densities than other regular tesselations. For instance with squares our eyes are drawn to the horizontal and vertical lines of the grid.
+
+https://cran.r-project.org/web/packages/hexbin/vignettes/hexagon_binning.pdf
+
+
+>    The data model of quadratic cells can cause problems of direction bias or dependence in certain raster analyses that consist of computing new parameters based on a raster cell neighbourhood.
+>    ...
+>    Hexagon depictions can help to disperse the perception of privileged directions in field model data.
+    
+http://www.ralphstraumann.ch/blog/2013/10/hexagons-quasi-maps-and-cartograms/
+
+
+
+
+
 ## How to use
 
 To add the library as an npm dependency to your project, run:
