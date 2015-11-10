@@ -1,5 +1,7 @@
 # Hexagonal geo-coding system
 
+[![Build Status](https://travis-ci.org/ilyabo/geohex.js.svg?branch=master)](https://travis-ci.org/ilyabo/geohex.js)
+
 Covering the world with hexagons on several zoom levels:
     
 ![example](doc/east-coast.png)
