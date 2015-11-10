@@ -47,12 +47,26 @@ Get the hexagon zone object for a specific location and zoom level:
 Get the hexagon zone object by it's code:
         
     var zone = geohex.getZoneByCode('XM428')
-    // zone.lat and zone.lon will be the coordinates of the center of the hexagon
         
         
+## Zone props and methods
         
-## Zone methods
-        
+### zone.code
+
+The string code of the hexagon.
+
+
+### zone.lat, zone.lon
+
+The geographic coordinates of the center of the hexagon.
+
+
+### zone.x, zone.y
+
+The coordinates of the hexagon in the hexagonal grid.
+
+
+
 ### zone.getHexCoords()
        
 Returns the coords of the hexagon vertices:
