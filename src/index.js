@@ -13,7 +13,7 @@ var getXYListByRect = require('./getXYListByRect');
 var GeoHex = {};
 
 // namspace GeoHex;
-GeoHex.version = "3.0.3";
+GeoHex.version = "3.0.4";
 
 // *** Share with all instances ***
 var h_key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";

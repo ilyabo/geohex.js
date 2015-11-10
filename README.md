@@ -13,7 +13,7 @@ Based on the [GeoHex library](http://www.geohex.org/) by [Tadayasu Sasada](https
 
 To add the library as an npm dependency to your project, run:
 
-    npm install --save ilyabo/geohex.js#3.0.3
+    npm install --save ilyabo/geohex.js#3.0.4
     
 
 Then:
@@ -28,14 +28,17 @@ Then:
 
 Get the hexagon zone object for a specific location and zoom level: 
     
-        var zone = geohex.getZoneByLocation(lat, lon, level);
+    
+    var zone = geohex.getZoneByLocation(33.35137950146622,135.6104480957031,2)
+    // zone.code will contain 'XM42'
   
   
 ### getZoneByCode(code)  
 
 Get the hexagon zone object by it's code:
         
-        var zone = geohex.getZoneByCode(code)
+    var zone = geohex.getZoneByCode('XM42')
+    // zone.lat and zone.lon will be the coordinates of the center of the hexagon
         
         
         
@@ -43,6 +46,6 @@ Get the hexagon zone object by it's code:
         
 ### zone.getHexCoords()
        
-Returns the coords of the hexagon vertices by lat/lon of a point
+Returns the coords of the hexagon vertices:
         
-        var coords = zone.getHexCoords();
+    var coords = geohex.getZoneByCode('XM42').getHexCoords()
