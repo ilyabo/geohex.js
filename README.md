@@ -29,15 +29,24 @@ Then:
 Get the hexagon zone object for a specific location and zoom level: 
     
     
-    var zone = geohex.getZoneByLocation(33.35137950146622,135.6104480957031,2)
-    // zone.code will contain 'XM42'
+    var zone0 = geohex.getZoneByLocation(33.35, 135.61, 0)
+    // zone0.code equals to 'XM'
+    
+    var zone1 = geohex.getZoneByLocation(33.35, 135.61, 1)
+    // zone1.code equals to 'XM4'
+          
+    var zone2 = geohex.getZoneByLocation(33.35, 135.61, 2)
+    // zone2.code equals to 'XM42'
+      
+    var zone3 = geohex.getZoneByLocation(33.35, 135.61, 3)
+    // zone3.code equals to 'XM428'
   
   
 ### getZoneByCode(code)  
 
 Get the hexagon zone object by it's code:
         
-    var zone = geohex.getZoneByCode('XM42')
+    var zone = geohex.getZoneByCode('XM428')
     // zone.lat and zone.lon will be the coordinates of the center of the hexagon
         
         
@@ -48,4 +57,4 @@ Get the hexagon zone object by it's code:
        
 Returns the coords of the hexagon vertices:
         
-    var coords = geohex.getZoneByCode('XM42').getHexCoords()
+    var coords = geohex.getZoneByCode('XM428').getHexCoords()
