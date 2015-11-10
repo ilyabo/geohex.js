@@ -14,7 +14,7 @@ var GeoHex = {};
 
 // namspace GeoHex;
 // version: 3.01
-GeoHex.version = "3.01";
+GeoHex.version = "3.0.2";
 
 // *** Share with all instances ***
 var h_key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
