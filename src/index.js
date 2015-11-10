@@ -1,28 +1,20 @@
-/// COPYRIGHT 2013 GEOHEX Inc. ///
-/// GEOHEX by @sa2da (http://geohex.net) is licensed under Creative Commons BY-SA 2.1 Japan License. ///
+/// GeoHex by @sa2da (http://geogames.net) is licensed under Creative Commons BY-SA 2.1 Japan License. ///
 
-///////////[2010.12.14 V3 Publish /////////
-///////////[2010.12.28 ZoneByCode () is corrected to within ± 180 the lon in] /////////
-///////////[2011.9.11 ZoneByCode () within h_x, corrects the h_y] /////////
-///////////[2013.1.6 HEX of X in the case of straddling the 180-degree line, uniquely correct the Y value] /////////
-///////////[2013.1.6 Outside the range of X, add the function adjustXY () to be corrected within the Y value] /////////
-///////////[2013.1.6 X, add the function getZoneByXY () to get the HEX from the Y value] /////////
-///////////[2013.1.6 Change Namespace from GeoHex to GEOHEX] /////////
-///////////[2013.1.9 Fixed correction logic of adjustXY] /////////
-///////////[2013.1.11 GetZoneByLocation () → getXYByLocation () and is divided into getZoneByXY ()] /////////
-///////////[2013.1.11 GetZoneByCode () → getXYByCode () and is divided into getZoneByXY ()] /////////
-///////////[2013.1.11 AdjustXY Fixed to -180 correction in the case of a correction of the x <y the x> y] /////////
-///////////[2013.1.17 GetZoneByXY () in -180 degrees correction Code generation logic the Modify /////////
+///////////[2010.12.14 v3公開]/////////
+///////////[2010.12.28 zoneByCode()内のlonを±180以内に補正]/////////
+///////////[2011.9.11 zoneByCode()内のh_x,h_yを補正]/////////
+
+
 
 
 var getXYListByRect = require('./getXYListByRect');
 
 
-var GEOHEX = {};
-// namspace GEOHEX;
-// version: 3.2
-GEOHEX.version = "3.2";
-GEOHEX.cache_on = true;
+var GeoHex = {};
+
+// namspace GeoHex;
+// version: 3.01
+GeoHex.version = "3.01";
 
 // *** Share with all instances ***
 var h_key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -35,8 +27,8 @@ var _zoneCache = {};
 
 // *** Share with all instances ***
 // private static
-function calcHexSize(_level) {
-	return h_base/Math.pow(3, _level+3);
+function calcHexSize(level) {
+	return h_base/Math.pow(3, level+1);
 }
 
 // private class
@@ -51,7 +43,7 @@ Zone.prototype.getLevel = function () {
 	return this.code.length-2;
 };
 Zone.prototype.getHexSize = function () {
-	return calcHexSize(this.getLevel());
+	return calcHexSize(this.getLevel() + 2);
 };
 Zone.prototype.getHexCoords = function () {
 	var h_lat = this.lat;
@@ -78,22 +70,11 @@ Zone.prototype.getHexCoords = function () {
 	];
 };
 
+// public static
+function getZoneByLocation(lat, lon, level) {
+	level +=2;
+	var h_size = calcHexSize(level);
 
-function getZoneByLocation(_lat, _lon, _level) {
-	var xy = getXYByLocation(_lat, _lon, _level);
-	var zone = getZoneByXY(xy.x, xy.y, _level);
-	return zone;
-}
-
-function getZoneByCode(_code) {
-	var xy = getXYByCode(_code);
-	var level = _code.length - 2;
-	var zone = getZoneByXY(xy.x, xy.y, level);
-	return zone;
-}
-
-function getXYByLocation(lat, lon, _level) {
-	var h_size = calcHexSize(_level);
 	var z_xy = loc2xy(lon, lat);
 	var lon_grid = z_xy.x;
 	var lat_grid = z_xy.y;
@@ -120,15 +101,70 @@ function getXYByLocation(lat, lon, _level) {
 		}
 	}
 
-	var inner_xy = adjustXY(h_x,h_y,_level);
-	h_x = inner_xy.x;
-	h_y = inner_xy.y;
-	return {"x": h_x, "y":h_y};
+	var h_lat = (h_k * h_x * unit_x + h_y * unit_y) / 2;
+	var h_lon = (h_lat - h_y * unit_y) / h_k;
+
+	var z_loc = xy2loc(h_lon, h_lat);
+	var z_loc_x = z_loc.lon;
+	var z_loc_y = z_loc.lat;
+	if(h_base - h_lon < h_size){
+		z_loc_x = 180;
+		var h_xy = h_x;
+		h_x = h_y;
+		h_y = h_xy;
+	}
+
+	var h_code ="";
+	var code3_x =new Array();
+	var code3_y =new Array();
+	var code3 ="";
+	var code9="";
+	var mod_x = h_x;
+	var mod_y = h_y;
+
+
+	for(i = 0;i <= level ; i++){
+	  var h_pow = Math.pow(3,level-i);
+	  if(mod_x >= Math.ceil(h_pow/2)){
+	    code3_x[i] =2;
+	    mod_x -= h_pow;
+	  }else if(mod_x <= -Math.ceil(h_pow/2)){
+	    code3_x[i] =0;
+	    mod_x += h_pow;
+	  }else{
+	    code3_x[i] =1;
+	  }
+	  if(mod_y >= Math.ceil(h_pow/2)){
+	    code3_y[i] =2;
+	    mod_y -= h_pow;
+	  }else if(mod_y <= -Math.ceil(h_pow/2)){
+	    code3_y[i] =0;
+	    mod_y += h_pow;
+	  }else{
+	    code3_y[i] =1;
+	  }
+	}
+
+	for(i=0;i<code3_x.length;i++){
+	  code3 += ("" + code3_x[i] + code3_y[i]);
+	  code9 += parseInt(code3,3);
+	  h_code += code9;
+	  code9="";
+	  code3="";
+	}
+	var h_2 = h_code.substring(3);
+	var h_1 = h_code.substring(0,3);
+	var h_a1 = Math.floor(h_1/30);
+	var h_a2 = h_1%30;
+	h_code = (h_key.charAt(h_a1)+h_key.charAt(h_a2)) + h_2;
+
+	if (!!_zoneCache[h_code])	return _zoneCache[h_code];
+	return (_zoneCache[h_code] = new Zone(z_loc_y, z_loc_x, h_x, h_y, h_code));
 }
 
-
-function getXYByCode(code) {
-	var level = code.length -2;
+function getZoneByCode(code) {
+	if (!!_zoneCache[code])	return _zoneCache[code];
+	var level = code.length;
 	var h_size =  calcHexSize(level);
 	var unit_x = 6 * h_size;
 	var unit_y = 6 * h_size * h_k;
@@ -143,7 +179,7 @@ function getXYByCode(code) {
 	  }
 	}
 	var d9xlen = h_dec9.length;
-	for(i=0;i<level +3 - d9xlen;i++){
+	for(i=0;i<level +1 - d9xlen;i++){
 	  h_dec9 ="0"+h_dec9;
 	  d9xlen++;
 	}
@@ -166,8 +202,8 @@ function getXYByCode(code) {
 	  h_decy[i]=h_dec3.charAt(i*2+1);
 	}
 
-	for(i=0;i<=level+2;i++){
-	    var h_pow = Math.pow(3,level+2-i);
+	for(i=0;i<=level;i++){
+	    var h_pow = Math.pow(3,level-i);
 	    if(h_decx[i] == 0){
 	        h_x -= h_pow;
 	    }else if(h_decx[i] == 2){
@@ -180,139 +216,22 @@ function getXYByCode(code) {
 	    }
 	}
 
-	var inner_xy = adjustXY(h_x,h_y,level);
-	h_x = inner_xy.x;
-	h_y = inner_xy.y;
+	var h_lat_y = (h_k * h_x * unit_x + h_y * unit_y) / 2;
+	var h_lon_x = (h_lat_y - h_y * unit_y) / h_k;
 
-	return {"x":h_x, "y":h_y};
+	var h_loc = xy2loc(h_lon_x, h_lat_y);
+	if(h_loc.lon>180){
+		 h_loc.lon -= 360;
+		 h_x -= Math.pow(3,level);    // v3.01
+		 h_y += Math.pow(3,level);    // v3.01
+	}else if(h_loc.lon<=-180){
+		 h_loc.lon += 360;
+		 h_x += Math.pow(3,level);    // v3.01
+		 h_y -= Math.pow(3,level);    // v3.01
+	}
+	return (_zoneCache[code] = new Zone(h_loc.lat, h_loc.lon, h_x, h_y, code));
 }
 
-function getZoneByXY(_x, _y, _level) {
-	var h_size = calcHexSize(_level);
-
-	var h_x =_x;
-	var h_y=_y;
-
-	var unit_x = 6 * h_size;
-	var unit_y = 6 * h_size * h_k;
-
-	var h_lat = (h_k * h_x * unit_x + h_y * unit_y) / 2;
-	var h_lon = (h_lat - h_y * unit_y) / h_k;
-
-	var z_loc = xy2loc(h_lon, h_lat);
-	var z_loc_x = z_loc.lon;
-	var z_loc_y = z_loc.lat;
-
-	var max_hsteps = Math.pow(3,_level+2);
-	var hsteps = Math.abs(h_x - h_y);
-
-	if(hsteps==max_hsteps){
-		if(h_x>h_y){
-		var tmp = h_x;
-		h_x = h_y;
-		h_y = tmp;
-		}
-		z_loc_x = -180;
-	}
-
-	var h_code ="";
-	var code3_x =new Array();
-	var code3_y =new Array();
-	var code3 ="";
-	var code9="";
-	var mod_x = h_x;
-	var mod_y = h_y;
-
-
-	for(i = 0;i <= _level+2 ; i++){
-	  var h_pow = Math.pow(3,_level+2-i);
-	  if(mod_x >= Math.ceil(h_pow/2)){
-	    code3_x[i] =2;
-	    mod_x -= h_pow;
-	  }else if(mod_x <= -Math.ceil(h_pow/2)){
-	    code3_x[i] =0;
-	    mod_x += h_pow;
-	  }else{
-	    code3_x[i] =1;
-	  }
-	  if(mod_y >= Math.ceil(h_pow/2)){
-	    code3_y[i] =2;
-	    mod_y -= h_pow;
-	  }else if(mod_y <= -Math.ceil(h_pow/2)){
-	    code3_y[i] =0;
-	    mod_y += h_pow;
-	  }else{
-	    code3_y[i] =1;
-	  }
-	  if(i==2&&(z_loc_x==-180 || z_loc_x>=0)){
-		  if(code3_x[0]==2&&code3_y[0]==1&&code3_x[1]==code3_y[1]&&code3_x[2]==code3_y[2]){
-			code3_x[0]=1;
-			code3_y[0]=2;
-		  }else if(code3_x[0]==1&&code3_y[0]==0&&code3_x[1]==code3_y[1]&&code3_x[2]==code3_y[2]){
-			code3_x[0]=0;
-			code3_y[0]=1
-		  }
-	  }
-	}
-
-	for(i=0;i<code3_x.length;i++){
-	  code3 += ("" + code3_x[i] + code3_y[i]);
-	  code9 += parseInt(code3,3);
-	  h_code += code9;
-	  code9="";
-	  code3="";
-	}
-	var h_2 = h_code.substring(3);
-	var h_1 = h_code.substring(0,3);
-	var h_a1 = Math.floor(h_1/30);
-	var h_a2 = h_1%30;
-	h_code = (h_key.charAt(h_a1)+h_key.charAt(h_a2)) + h_2;
-
-	if(GEOHEX.cache_on){
-		if (!!_zoneCache[h_code])	return _zoneCache[h_code];
-		return (_zoneCache[h_code] = new Zone(z_loc_y, z_loc_x, _x, _y, h_code));
-	}else{
-		return new Zone(z_loc_y, z_loc_x, _x, _y, h_code);
-	}
-}
-
-function adjustXY(_x, _y, _level){
-	var x =_x;
-	var y =_y;
-	var rev = 0;
-	var max_hsteps = Math.pow(3,_level+2);
-	var hsteps = Math.abs(x - y);
-	if(hsteps==max_hsteps&&x>y){
-		var tmp = x;
-		x = y;
-		y = tmp;
-		rev =1;
-	}else if(hsteps>max_hsteps){
-		var dif = hsteps - max_hsteps;
-		var dif_x = Math.floor(dif/2);
-		var dif_y = dif - dif_x;
-		var edge_x;
-		var edge_y;
-		if(x>y){
-			edge_x = x - dif_x;
-			edge_y = y + dif_y;
-			var h_xy = edge_x;
-			edge_x = edge_y;
-			edge_y = h_xy;
-			x = edge_x + dif_x;
-			y = edge_y - dif_y;
-		}else if(y>x){
-			edge_x = x + dif_x;
-			edge_y = y - dif_y;
-			var h_xy = edge_x;
-			edge_x = edge_y;
-			edge_y = h_xy;
-			x = edge_x - dif_x;
-			y = edge_y + dif_y;
-		}
-	}
-	return { x: x, y: y , rev:rev};
-}
 
 // private static
 function loc2xy(lon, lat) {
@@ -330,13 +249,8 @@ function xy2loc(x, y) {
 }
 
 // EXPORT
-GEOHEX.getZoneByLocation = getZoneByLocation;
-GEOHEX.getXYByLocation = getXYByLocation;
-GEOHEX.getZoneByCode = getZoneByCode;
-GEOHEX.getZoneByXY = getZoneByXY;
-GEOHEX.loc2xy = loc2xy;
-GEOHEX.xy2loc = xy2loc;
-GEOHEX.adjustXY = adjustXY;
-GEOHEX.getXYListByRect = getXYListByRect;
+GeoHex.getZoneByLocation = getZoneByLocation;
+GeoHex.getZoneByCode = getZoneByCode;
+GeoHex.getXYListByRect = getXYListByRect;
 
-module.exports = GEOHEX;
+module.exports = GeoHex;
