@@ -1,0 +1,28 @@
+{
+  "name": "geohex.js",
+  "version": "3.2.0",
+  "description": "Hexagonal geo-coding system",
+  "main": "index.js",
+  "scripts": {
+    "test": "faucet `find test -name '*-test.js'`"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ilyabo/geohex.js.git"
+  },
+  "keywords": [
+    "geohex",
+    "hexagonal",
+    "geo-coding"
+  ],
+  "author": "Tadayasu Sasada",       g
+  "license": "CC-BY-SA",
+  "bugs": {
+    "url": "https://github.com/ilyabo/geohex.js/issues"
+  },
+  "homepage": "https://github.com/ilyabo/geohex.js",
+  "devDependencies": {
+    "faucet": "0.0.1",
+    "tape": "^4.2.2"
+  }
+}
