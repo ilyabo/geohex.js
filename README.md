@@ -9,6 +9,9 @@ Covering the world with hexagons on several zoom levels:
 Based on the [GeoHex library](http://www.geohex.org/) by [Tadayasu Sasada](https://twitter.com/sa2da).
 
 
+This is a sister library for [this Scala version](https://github.com/teralytics/geohex).
+
+
 ## Why hexagons?
 
 There are several advantages hexagonal grids may have over quadratic ones for data visualization, most importantly: 
