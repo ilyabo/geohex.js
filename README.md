@@ -11,6 +11,11 @@ Based on the [GeoHex library](http://www.geohex.org/) by [Tadayasu Sasada](https
 
 ## Why hexagons?
 
+There are several advantages hexagonal grids may have over quadratic ones for data visualization, most importantly: 
+
+  * better sampling efficiency
+  * better perception (visually less biased).
+
 ![squares vs hexagons](doc/why-hexagons.png)
 
 >  Why hexagons? There are many reasons for using hexagons, at least over squares. Hexagons have symmetry of nearest neighbors which is lacking in square bins. Hexagons are the maximum number of sides a polygon can have for a regular tesselation of the plane, so in terms of packing a hexagon is 13% more efficient for covering the plane than squares. This property translates into better sampling efficiency at least for elliptical shapes. Lastly hexagons are visually less biased for displaying densities than other regular tesselations. For instance with squares our eyes are drawn to the horizontal and vertical lines of the grid.
