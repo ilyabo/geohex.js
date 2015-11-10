@@ -61,8 +61,8 @@ tape("getHexCoords can return coords of hexagon vertices by lat/lon of a point",
 
     for (var pi = 0; pi < 6; pi++) {
       var cs = coords.shift();
-      test.equal(tc.shift().toFixed(FP_PRECISION), cs.lat.toFixed(FP_PRECISION));
-      test.equal(tc.shift().toFixed(FP_PRECISION), cs.lon.toFixed(FP_PRECISION));
+      test.equal(tc.shift().toFixed(FP_PRECISION), cs.shift().toFixed(FP_PRECISION));
+      test.equal(tc.shift().toFixed(FP_PRECISION), cs.shift().toFixed(FP_PRECISION));
     }
   }
 

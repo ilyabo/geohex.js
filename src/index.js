@@ -13,8 +13,7 @@ var getXYListByRect = require('./getXYListByRect');
 var GeoHex = {};
 
 // namspace GeoHex;
-// version: 3.01
-GeoHex.version = "3.0.2";
+GeoHex.version = "3.0.3";
 
 // *** Share with all instances ***
 var h_key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -62,12 +61,12 @@ Zone.prototype.getHexCoords = function () {
 	var h_cl = xy2loc(h_x - 1 * h_size, h_y).lon;
 	var h_cr = xy2loc(h_x + 1 * h_size, h_y).lon;
 	return [
-		{lat: h_lat, lon: h_l},
-		{lat: h_top, lon: h_cl},
-		{lat: h_top, lon: h_cr},
-		{lat: h_lat, lon: h_r},
-		{lat: h_btm, lon: h_cr},
-		{lat: h_btm, lon: h_cl}
+		[h_lat, h_l],
+		[h_top, h_cl],
+		[h_top, h_cr],
+		[h_lat, h_r],
+		[h_btm, h_cr],
+		[h_btm, h_cl]
 	];
 };
 

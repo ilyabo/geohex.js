@@ -1,6 +1,6 @@
 {
-  "name": "geohex.js",
-  "version": "3.0.1",
+  "name": "geohex",
+  "version": "3.0.3",
   "description": "Hexagonal geo-coding system",
   "main": "index.js",
   "scripts": {
