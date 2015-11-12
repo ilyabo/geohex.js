@@ -21,7 +21,6 @@ There are several advantages hexagonal grids may have over quadratic ones for da
   * better sampling efficiency
   * better perception (visually less biased).
 
-![squares vs hexagons](doc/why-hexagons.png)
 
 >  Why hexagons? There are many reasons for using hexagons, at least over squares. Hexagons have symmetry of nearest neighbors which is lacking in square bins. Hexagons are the maximum number of sides a polygon can have for a regular tesselation of the plane, so in terms of packing a hexagon is 13% more efficient for covering the plane than squares. This property translates into better sampling efficiency at least for elliptical shapes. Lastly hexagons are visually less biased for displaying densities than other regular tesselations. For instance with squares our eyes are drawn to the horizontal and vertical lines of the grid.
 
@@ -34,12 +33,26 @@ https://cran.r-project.org/web/packages/hexbin/vignettes/hexagon_binning.pdf
     
 http://www.ralphstraumann.ch/blog/2013/10/hexagons-quasi-maps-and-cartograms/
 
+### Squares vs hexagons
 
+![squares vs hexagons](doc/why-hexagons.png)
 
 
 
 ## How to use
 
+Add this to your HTML file:
+
+    <script src="geohex.min.js"></script>
+
+Then, you call use the library methods like this: 
+
+    <script>
+      var zone = geohex.getZoneByCode('XM428');
+      console.log(zone.centroid);
+    </script>
+
+## Usage as an NPM module
 To add the library as an npm dependency to your project, run:
 
     npm install --save ilyabo/geohex.js#3.0.5
