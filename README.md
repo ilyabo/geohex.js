@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/ilyabo/geohex.js.svg?branch=master)](https://travis-ci.org/ilyabo/geohex.js)
 
-Covering the world with hexagons on several zoom levels:
+Covering the world with nested hexagons on multiple zoom levels:
     
-![example](doc/east-coast.png)
+![example](doc/ny-coverage.png)
 
 
 
@@ -42,7 +42,7 @@ http://www.ralphstraumann.ch/blog/2013/10/hexagons-quasi-maps-and-cartograms/
 
 To add the library as an npm dependency to your project, run:
 
-    npm install --save ilyabo/geohex.js#3.0.4
+    npm install --save ilyabo/geohex.js#3.0.5
     
 
 Then:
@@ -85,15 +85,9 @@ Get the hexagon zone object by it's code:
 The string code of the hexagon.
 
 
-### zone.lat, zone.lon
+### zone.centroid
 
 The geographic coordinates of the center of the hexagon.
-
-
-### zone.x, zone.y
-
-The coordinates of the hexagon in the hexagonal grid.
-
 
 
 ### zone.getHexCoords()
@@ -101,3 +95,31 @@ The coordinates of the hexagon in the hexagonal grid.
 Returns the coords of the hexagon vertices:
         
     var coords = geohex.getZoneByCode('XM428').getHexCoords()
+
+
+
+# LICENSE
+
+The MIT License (MIT)
+
+Copyright (c) 2010 [Tadayasu Sasada](http://geohex.org)
+
+Copyright (c) 2015 [Ilya Boyandin](https://github.com/ilyabo)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.

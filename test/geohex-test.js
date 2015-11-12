@@ -1,5 +1,5 @@
 var tape = require("tape"),
-    geohex = require("../src/");
+    geohex = require("../dist/geohex");
 
 var FP_PRECISION = 10;
 
@@ -36,8 +36,8 @@ tape("getZoneByCode can return lat/lon by hexagon code", function(test) {
     var code = tc[0], lat= tc[1], lon = tc[2], level = code.length - 2;
 
     var zone = geohex.getZoneByCode(code);
-    test.equal(zone.lat.toFixed(FP_PRECISION), lat.toFixed(FP_PRECISION));
-    test.equal(zone.lon.toFixed(FP_PRECISION), lon.toFixed(FP_PRECISION));
+    test.equal(zone.centroid[0].toFixed(FP_PRECISION), lat.toFixed(FP_PRECISION));
+    test.equal(zone.centroid[1].toFixed(FP_PRECISION), lon.toFixed(FP_PRECISION));
   }
 
   test.end();
