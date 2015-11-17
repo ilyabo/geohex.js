@@ -35,6 +35,27 @@ function calcHexSize(level) {
   return h_base / Math.pow(3, level + 1);
 }
 
+function midpoint(p1, p2) {
+  return [ (p1[0] + p2[0])/2, (p1[1] + p2[1])/2 ];
+}
+
+function distance(p1, p2) {
+  // from turf-distance
+  var dLat = toRadians(p2[1] - p1[1]);
+  var dLon = toRadians(p2[0] - p1[0]);
+  var lat1 = toRadians(p1[1]);
+  var lat2 = toRadians(p2[1]);
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+  var R = 6373;
+  return R * c;
+};
+
+function toRadians(degree) {
+  return degree * Math.PI / 180;
+}
 
 
 
@@ -53,7 +74,20 @@ function Zone(lat, lon, x, y, code) {
     return calcHexSize(this.getLevel() + 2);
   };
 
-  zone.getHexCoords = function () {
+  zone.getInnerRadius = function() {
+    var coords = this.getCoords();
+    return distance(
+        midpoint(coords[0], coords[1]),
+        midpoint(coords[3], coords[4])
+    ) * 1000 / 2;
+  };
+
+  zone.getOuterRadius = function() {
+    var coords = this.getCoords();
+    return distance(coords[0], coords[3]) * 1000 / 2;
+  };
+
+  zone.getCoords = function () {
     var h_lat = this.lat;
     var h_lon = this.lon;
     var h_xy = loc2xy(h_lon, h_lat);
@@ -69,13 +103,32 @@ function Zone(lat, lon, x, y, code) {
     var h_cl = xy2loc(h_x - 1 * h_size, h_y).lon;
     var h_cr = xy2loc(h_x + 1 * h_size, h_y).lon;
     return [
-      [h_lat, h_l],
-      [h_top, h_cl],
-      [h_top, h_cr],
-      [h_lat, h_r],
-      [h_btm, h_cr],
-      [h_btm, h_cl]
+      [h_l, h_lat],
+      [h_cl, h_top],
+      [h_cr, h_top],
+      [h_r, h_lat],
+      [h_cr, h_btm],
+      [h_cl, h_btm]
     ];
+  };
+
+  zone.getPolygon = function() {
+    var coords = zone.getCoords();
+    coords.push(coords[0]);
+    return {
+      type: "Feature",
+      geometry: {
+        type: "Polygon",
+        coordinates: [ coords ]
+      },
+      properties: { code: zone.code }
+    }
+  };
+
+  zone.getWKT = function() {
+    var coords = zone.getCoords();
+    coords.push(coords[0]);
+    return 'POLYGON ((' + coords.map(function(p) { return p.join(' ') }).join(', ') + '))'
   };
 
   return zone;

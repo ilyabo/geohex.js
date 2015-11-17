@@ -55,7 +55,7 @@ Then, you call use the library methods like this:
 ## Usage as an NPM module
 To add the library as an npm dependency to your project, run:
 
-    npm install --save ilyabo/geohex.js#3.0.5
+    npm install --save ilyabo/geohex.js#3.0.6
     
 
 Then:
@@ -102,12 +102,36 @@ The string code of the hexagon.
 
 The geographic coordinates of the center of the hexagon.
 
+### zone.getInnerRadius()
 
-### zone.getHexCoords()
+Returns the outer radius of the hexagon in meters.
+
+### zone.getOuterRadius()
+
+Returns the outer radius of the hexagon in meters.
+
+
+### zone.getCoords()
        
-Returns the coords of the hexagon vertices:
+Returns the coords of the hexagon vertices (array of [lon, lat] arrays):
         
     var coords = geohex.getZoneByCode('XM428').getHexCoords()
+
+### zone.getPolygon()
+       
+Returns the GeoJSON polygon geometry for the hexagon.
+        
+    var coords = geohex.getZoneByCode('XM428').getPolygon()
+    
+
+### zone.getWKT()
+       
+Returns the [well-known text](https://en.wikipedia.org/wiki/Well-known_text) polygon geometry for the hexagon.
+        
+    var coords = geohex.getZoneByCode('XM428').getWellKnownText()
+    
+    
+    
 
 
 

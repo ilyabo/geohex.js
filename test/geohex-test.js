@@ -46,7 +46,7 @@ tape("getZoneByCode can return lat/lon by hexagon code", function(test) {
 
 
 
-tape("getHexCoords can return coords of hexagon vertices by lat/lon of a point", function(test) {
+tape("getCoords can return coords of hexagon vertices by lat/lon of a point", function(test) {
 
   var testCases = require('./testdata_ll2polygon.json');
 
@@ -56,13 +56,14 @@ tape("getHexCoords can return coords of hexagon vertices by lat/lon of a point",
     var lat = tc.shift(), lon = tc.shift(), level = tc.shift();
 
     var zone = geohex.getZoneByLocation(lat, lon, level);
-    var coords = zone.getHexCoords();
+    var coords = zone.getCoords();
 
 
     for (var pi = 0; pi < 6; pi++) {
       var cs = coords.shift();
-      test.equal(tc.shift().toFixed(FP_PRECISION), cs.shift().toFixed(FP_PRECISION));
-      test.equal(tc.shift().toFixed(FP_PRECISION), cs.shift().toFixed(FP_PRECISION));
+      var lon = cs.shift(), lat = cs.shift();
+      test.equal(lat.toFixed(FP_PRECISION), tc.shift().toFixed(FP_PRECISION));
+      test.equal(lon.toFixed(FP_PRECISION), tc.shift().toFixed(FP_PRECISION));
     }
   }
 
@@ -82,8 +83,38 @@ tape("getHexSize can return hexagon sizes by lat/lon of a point", function(test)
 
     var zone = geohex.getZoneByLocation(lat, lon, level);
 
-    test.equal(size.toFixed(FP_PRECISION), zone.getHexSize().toFixed(FP_PRECISION));
+    test.equal(zone.getHexSize().toFixed(FP_PRECISION), size.toFixed(FP_PRECISION));
   }
+
+  test.end();
+});
+
+
+
+
+
+
+
+tape("getPolygon can return hexagon as GeoJSON polygon", function(test) {
+
+  var zone = geohex.getZoneByLocation(70.777431, 24.915905, 8);
+  test.deepEqual(
+    zone.getPolygon(),
+    { geometry: { coordinates: [ [ [ 24.91490118376265, 70.7777498564315 ], [ 24.915917289031157, 70.77832928094634 ], [ 24.917949499568174, 70.77832928094634 ], [ 24.91896560483668, 70.7777498564315 ], [ 24.917949499568174, 70.7771704151106 ], [ 24.915917289031157, 70.7771704151106 ], [ 24.91490118376265, 70.7777498564315 ] ] ], type: 'Polygon' }, properties: { code: 'YC35718535' }, type: 'Feature' }
+  )
+
+  test.end();
+});
+
+
+
+tape("getWKT can return hexagon as WKT polygon", function(test) {
+
+  var zone = geohex.getZoneByLocation(70.777431, 24.915905, 8);
+  test.equal(
+    zone.getWKT(),
+    'POLYGON ((24.91490118376265 70.7777498564315, 24.915917289031157 70.77832928094634, 24.917949499568174 70.77832928094634, 24.91896560483668 70.7777498564315, 24.917949499568174 70.7771704151106, 24.915917289031157 70.7771704151106, 24.91490118376265 70.7777498564315))'
+  )
 
   test.end();
 });

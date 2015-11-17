@@ -58,13 +58,7 @@ var zoom = 6;
 
 
 function toFeature(code) {
-  var zone = geohex.getZoneByCode(code);
-  var coords = zone.getHexCoords();
-  return {
-    "type": "Feature",
-    "geometry": {"type": "LineString", "coordinates": [].concat(coords, [coords[0]])},
-    "properties": zone
-  }
+  return geohex.getZoneByCode(code).getPolygon();
 }
 
 
@@ -117,7 +111,7 @@ function reset() {
 }
 
 // Use Leaflet to implement a D3 geometric transformation.
-function projectPoint(lat, lon) {
+function projectPoint(lon, lat) {
   var point = map.latLngToLayerPoint(new L.LatLng(lat, lon));
   this.stream.point(point.x, point.y);
 }
