@@ -4,7 +4,7 @@
 
 Covering the world with nested hexagons on multiple zoom levels:
     
-![example](doc/ny-coverage.png)
+![example](doc/random-walk.png)
 
 
 
