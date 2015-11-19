@@ -1,6 +1,8 @@
 var tape = require("tape"),
     geohex = require("../dist/geohex");
 
+require('./in-delta');
+
 var FP_PRECISION = 10;
 
 tape("getZoneByLocation can return hexagon by lat/lot for 0,0", function(test) {
@@ -98,9 +100,20 @@ tape("getHexSize can return hexagon sizes by lat/lon of a point", function(test)
 tape("getPolygon can return hexagon as GeoJSON polygon", function(test) {
 
   var zone = geohex.getZoneByLocation(70.777431, 24.915905, 8);
+  var poly = zone.getPolygon();
+
+  var expectedCoords = [[ 24.91490118376265, 70.7777498564315 ], [ 24.915917289031157, 70.77832928094634 ], [ 24.917949499568174, 70.77832928094634 ], [ 24.91896560483668, 70.7777498564315 ], [ 24.917949499568174, 70.7771704151106 ], [ 24.915917289031157, 70.7771704151106 ], [ 24.91490118376265, 70.7777498564315 ]]
+  var actualCoords = poly.geometry.coordinates[0];
+  for (var i in expectedCoords) {
+    var ec = expectedCoords[i];
+    var ac = actualCoords[i];
+    test.inDelta(ac[0], ec[0], 1e-6);
+  }
+
+  delete poly.geometry.coordinates;
+
   test.deepEqual(
-    zone.getPolygon(),
-    { geometry: { coordinates: [ [ [ 24.91490118376265, 70.7777498564315 ], [ 24.915917289031157, 70.77832928094634 ], [ 24.917949499568174, 70.77832928094634 ], [ 24.91896560483668, 70.7777498564315 ], [ 24.917949499568174, 70.7771704151106 ], [ 24.915917289031157, 70.7771704151106 ], [ 24.91490118376265, 70.7777498564315 ] ] ], type: 'Polygon' }, properties: { code: 'YC35718535' }, type: 'Feature' }
+    poly, { geometry: { type: 'Polygon' }, properties: { code: 'YC35718535' }, type: 'Feature' }
   )
 
   test.end();
@@ -111,9 +124,9 @@ tape("getPolygon can return hexagon as GeoJSON polygon", function(test) {
 tape("getWKT can return hexagon as WKT polygon", function(test) {
 
   var zone = geohex.getZoneByLocation(70.777431, 24.915905, 8);
-  test.equal(
-    zone.getWKT(),
-    'POLYGON ((24.91490118376265 70.7777498564315, 24.915917289031157 70.77832928094634, 24.917949499568174 70.77832928094634, 24.91896560483668 70.7777498564315, 24.917949499568174 70.7771704151106, 24.915917289031157 70.7771704151106, 24.91490118376265 70.7777498564315))'
+  var re = "^POLYGON \\(\\(24\.91490\\d+ 70\.77774\\d+, 24\.91591\\d+ 70\.77832\\d+, 24\.91794\\d+ 70\.77832\\d+, 24\.91896\\d+ 70\.77774\\d+, 24\.91794\\d+ 70\.77717\\d+, 24\.91591\\d+ 70\.77717\\d+, 24\.91490\\d+ 70\.77774\\d+\\)\\)$";
+  test.true(
+    new RegExp(re).test(zone.getWKT())
   )
 
   test.end();
