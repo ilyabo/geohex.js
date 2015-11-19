@@ -5,7 +5,7 @@
   "main": "dist/geohex.js",
   "scripts": {
     "pretest": "mkdir -p dist  &&  babel --plugins transform-es2015-modules-umd src/geohex.js -o dist/geohex.js",
-    "test": "node `find test -name '*-test.js'` | faucet",
+    "test": "faucet `find test -name '*-test.js'`",
     "prepublish": "npm run test  &&  uglifyjs dist/geohex.js -c -m -o dist/geohex.min.js"
   },
   "repository": {
