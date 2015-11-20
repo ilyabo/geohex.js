@@ -18,6 +18,7 @@
   });
   exports.getZoneByLocation = getZoneByLocation;
   exports.getZoneByCode = getZoneByCode;
+  exports.getZonesWithin = getZonesWithin;
   var geohex = {};
   var h_key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
   var h_base = 20037508.34;
@@ -45,7 +46,7 @@
     };
   }
 
-  function calcHexSize(level) {
+  function circumradiusInDegrees(level) {
     return h_base / Math.pow(3, level + 1);
   }
 
@@ -83,7 +84,7 @@
     };
 
     zone.getHexSize = function () {
-      return calcHexSize(this.getLevel() + 2);
+      return circumradiusInDegrees(this.getLevel() + 2);
     };
 
     zone.getInnerRadius = function () {
@@ -141,7 +142,7 @@
 
   function getZoneByLocation(lat, lon, level) {
     level += 2;
-    var h_size = calcHexSize(level);
+    var h_size = circumradiusInDegrees(level);
     var z_xy = loc2xy(lon, lat);
     var lon_grid = z_xy.x;
     var lat_grid = z_xy.y;
@@ -231,7 +232,7 @@
 
   function getZoneByCode(code) {
     var level = code.length;
-    var h_size = calcHexSize(level);
+    var h_size = circumradiusInDegrees(level);
     var unit_x = 6 * h_size;
     var unit_y = 6 * h_size * h_k;
     var h_x = 0;
@@ -306,5 +307,29 @@
     }
 
     return new Zone(h_loc.lat, h_loc.lon, h_x, h_y, code);
+  }
+
+  function getZonesWithin(boundingBox, level) {
+    var fromLat = boundingBox[0][1],
+        fromLon = boundingBox[0][0],
+        toLat = boundingBox[1][1],
+        toLon = boundingBox[1][0];
+    var step = circumradiusInDegrees(level) / 2;
+    var lat, lon;
+    var zones = [],
+        codes = {};
+
+    for (lat = fromLat; lat <= toLat; lat++) {
+      for (lon = fromLon; lon <= toLon; lon++) {
+        var zone = getZoneByLocation(lat, lon, level);
+
+        if (!codes[zone.code]) {
+          codes[zone.code] = true;
+          zones.push(zone);
+        }
+      }
+    }
+
+    return zones;
   }
 });

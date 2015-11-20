@@ -31,7 +31,7 @@ function xy2loc(x, y) {
 	return { lon: lon, lat: lat };
 }
 
-function calcHexSize(level) {
+function circumradiusInDegrees(level) {
   return h_base / Math.pow(3, level + 1);
 }
 
@@ -71,7 +71,7 @@ function Zone(lat, lon, x, y, code) {
   };
 
   zone.getHexSize = function() {
-    return calcHexSize(this.getLevel() + 2);
+    return circumradiusInDegrees(this.getLevel() + 2);
   };
 
   zone.getInnerRadius = function() {
@@ -112,6 +112,7 @@ function Zone(lat, lon, x, y, code) {
     ];
   };
 
+
   zone.getPolygon = function() {
     var coords = zone.getCoords();
     coords.push(coords[0]);
@@ -140,7 +141,7 @@ function Zone(lat, lon, x, y, code) {
 
 export function getZoneByLocation(lat, lon, level) {
   level += 2;
-  var h_size = calcHexSize(level);
+  var h_size = circumradiusInDegrees(level);
 
   var z_xy = loc2xy(lon, lat);
   var lon_grid = z_xy.x;
@@ -230,7 +231,7 @@ export function getZoneByLocation(lat, lon, level) {
 
 export function getZoneByCode(code) {
   var level = code.length;
-  var h_size = calcHexSize(level);
+  var h_size = circumradiusInDegrees(level);
   var unit_x = 6 * h_size;
   var unit_y = 6 * h_size * h_k;
   var h_x = 0;
@@ -297,4 +298,27 @@ export function getZoneByCode(code) {
   }
 
   return new Zone(h_loc.lat, h_loc.lon, h_x, h_y, code);
+}
+
+
+export function getZonesWithin(boundingBox, level) {
+  var fromLat = boundingBox[0][1], fromLon = boundingBox[0][0],
+      toLat = boundingBox[1][1], toLon = boundingBox[1][0];
+
+  var step = circumradiusInDegrees(level) / 2;
+  var lat, lon;
+
+  var zones = [], codes = {};
+
+  for (lat = fromLat; lat <= toLat; lat++) {
+    for (lon = fromLon; lon <= toLon; lon++) {
+      var zone = getZoneByLocation(lat, lon, level);
+      if (!codes[zone.code]) {
+        codes[zone.code] = true;
+        zones.push(zone);
+      }
+    }
+  }
+
+  return zones;
 }

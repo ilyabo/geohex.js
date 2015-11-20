@@ -89,6 +89,13 @@ Get the hexagon zone object for a specific location and zoom level:
 Get the hexagon zone object by it's code:
         
     var zone = geohex.getZoneByCode('XM428')
+     
+### getZonesWithin(bbox, level)  
+
+Get all hexagons of the given `level` falling into the `bbox`.  
+        
+    var zones = geohex.getZonesWithin([[-125, 24], [-64, 49]], 2);
+
         
         
 ## Zone props and methods
