@@ -55,7 +55,7 @@ Then, you call use the library methods like this:
 ## Usage as an NPM module
 To add the library as an npm dependency to your project, run:
 
-    npm install --save ilyabo/geohex.js#3.0.6
+    npm install --save ilyabo/geohex.js#3.0.7
     
 
 Then:
