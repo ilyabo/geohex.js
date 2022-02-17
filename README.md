@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/ilyabo/geohex.js.svg?branch=master)](https://travis-ci.org/ilyabo/geohex.js)
 
-Covering the world in the Mercator projection with nested hexagons on multiple zoom levels:
+Covering the world in the Mercator projection with a hierarchy of hexagons on multiple zoom levels:
     
 ![example](doc/random-walk.png)
 
